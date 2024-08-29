@@ -1,0 +1,266 @@
+services:
+
+
+  ## DATABASES
+
+  ## bookmark-service
+  mysql-bookmark:
+    container_name: mysql-bookmark
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: bookmark_service
+      MYSQL_USER: adem
+      MYSQL_PASSWORD: adem1234
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./mysql-bookmark:/var/lib/mysql
+    ports:
+      - "3311:3306"
+    restart: always
+
+  ## cart-service
+  mysql-cart:
+    container_name: mysql-cart
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: cart_service
+      MYSQL_USER: adem
+      MYSQL_PASSWORD: adem1234
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./mysql-cart:/var/lib/mysql
+    ports:
+      - "3312:3306"
+    restart: always
+
+  ## chat-service
+  mysql-chat:
+    container_name: mysql-chat
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: chat_service
+      MYSQL_USER: adem
+      MYSQL_PASSWORD: adem1234
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./mysql-chat:/var/lib/mysql
+    ports:
+      - "3313:3306"
+    restart: always
+
+  ## comment-service
+  mysql-comment:
+    container_name: mysql-comment
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: comment_service
+      MYSQL_USER: adem
+      MYSQL_PASSWORD: adem1234
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./mysql-comment:/var/lib/mysql
+    ports:
+      - "3314:3306"
+    restart: always
+
+  ## connection-service
+  mysql-connection:
+    container_name: mysql-connection
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: connection_service
+      MYSQL_USER: adem
+      MYSQL_PASSWORD: adem1234
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./mysql-connection:/var/lib/mysql
+    ports:
+      - "3308:3306"
+    restart: always
+
+  ## customer-service
+  mysql-customer:
+    container_name: mysql-customer
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: customer_service
+      MYSQL_USER: adem
+      MYSQL_PASSWORD: adem1234
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./mysql-customer:/var/lib/mysql
+    ports:
+      - "3315:3306"
+    restart: always
+
+  ## inventory
+  mysql-inventory:
+    container_name: mysql-inventory
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: inventory_service
+      MYSQL_USER: adem
+      MYSQL_PASSWORD: adem1234
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./mysql-inventory:/var/lib/mysql
+    ports:
+      - "3316:3306"
+    restart: always
+
+  ## order-service
+  mysql-order:
+    container_name: mysql-order
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: order_service
+      MYSQL_USER: adem
+      MYSQL_PASSWORD: adem1234
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    ports:
+      - "3317:3306"
+    restart: always
+
+  ## payment-service
+  mysql-payment:
+    container_name: mysql-payment
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: payment_service
+      MYSQL_USER: adem
+      MYSQL_PASSWORD: adem1234
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./mysql-payment:/var/lib/mysql
+    ports:
+      - "3318:3306"
+    restart: always
+
+  ## product-service
+  mysql-product:
+    container_name: mysql-product
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: product_service
+      MYSQL_USER: adem
+      MYSQL_PASSWORD: adem1234
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./mysql-product:/var/lib/mysql
+    ports:
+      - "3319:3306"
+    restart: always
+
+  ## rating-service
+  mysql-rating:
+    container_name: mysql-rating
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: rating_service
+      MYSQL_USER: adem
+      MYSQL_PASSWORD: adem1234
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./mysql-rating:/var/lib/mysql
+    ports:
+      - "3320:3306"
+    restart: always
+
+  ## report-service
+  mysql-report:
+    container_name: mysql-report
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: report_service
+      MYSQL_USER: adem
+      MYSQL_PASSWORD: adem1234
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./mysql-report:/var/lib/mysql
+    ports:
+      - "3321:3306"
+    restart: always
+
+    ## support-service
+  mysql-support:
+    container_name: mysql-support
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: support_service
+      MYSQL_USER: adem
+      MYSQL_PASSWORD: adem1234
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - ./mysql-support:/var/lib/mysql
+    ports:
+      - "3322:3306"
+    restart: always
+
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: broker
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 10
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 10
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 10
+
+
+  keycloak-mysql:
+    container_name: keycloak-mysql
+    image: mysql:5.7
+    volumes:
+      - ./mysql_keycloak_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: password
+
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:18.0.0
+    command: [ "start-dev", "--import-realm" ]
+    environment:
+      DB_VENDOR: MYSQL
+      DB_ADDR: mysql
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8181:8080"
+    volumes:
+      - ./realms/:/opt/keycloak/data/import/
+    depends_on:
+      - keycloak-mysql
+
+  cart-service:
+    container_name: cart-service
+    image: ademqafarlii/cart-service:latest
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mysql-cart
+
+
